@@ -1,6 +1,6 @@
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.preprocessing import OneHotEncoder, PowerTransformer, MinMaxScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
@@ -25,8 +25,10 @@ categorical_transformer = Pipeline(steps=[
 ])
 
 numerical_transformer = Pipeline(steps=[
-    ('imputer', SimpleImputer(strategy='mean')),
-    ('scaler', StandardScaler())
+    ('imputer', SimpleImputer(strategy='median')),
+    ('scaler', PowerTransformer())
+#    ('scaler', MinMaxScaler())
+
 ])
 
 # Combine preprocessing steps for categorical and numerical features
