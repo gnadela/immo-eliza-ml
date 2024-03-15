@@ -8,8 +8,9 @@ def preprocess_data(X):
     # Features to drop
     X = X.drop(columns=['cadastral_income', 'region']) 
 
-    # Convert to str to be included in categorical feature
+    # New Feature: Extract the first two digits of the zip_code 
     X['zip_code'] = X['zip_code'].astype(str)
+    X['postal_zone'] = X['zip_code'].str[:2]
 
     # Define categorical and numerical features
     categorical_features = X.select_dtypes(include=['object']).columns.tolist() 

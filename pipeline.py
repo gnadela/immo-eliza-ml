@@ -15,8 +15,9 @@ df = pd.read_csv('data/properties.csv')
 X = df.drop(columns=['id', 'price', 'cadastral_income', 'region'])  # Features
 y = df['price']  # Target variable
 
-# Convert to str to be included in categorical feature
+# New Feature: Extract the first two digits of the zip_code 
 X['zip_code'] = X['zip_code'].astype(str)
+X['postal_zone'] = X['zip_code'].str[:2]
 
 # Define categorical and numerical features
 categorical_features = X.select_dtypes(include=['object']).columns.tolist() 
