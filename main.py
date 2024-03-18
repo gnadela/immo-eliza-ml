@@ -7,8 +7,12 @@ from sklearn.model_selection import train_test_split
 df = pd.read_csv('data/properties.csv')
 
 # Define features and target variable
-X = df.drop(columns=['id', 'price'])  # Features
+X = df.drop(columns=['id', 'cadastral_income', 'region']) 
 y = df['price']  # Target variable
+
+# New Feature: Extract the first two digits of the zip_code 
+X['zip_code'] = X['zip_code'].astype(str)
+X['postal_zone'] = X['zip_code'].str[:2]
 
 # Split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=155)

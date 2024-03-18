@@ -12,7 +12,7 @@ import pandas as pd
 df = pd.read_csv('data/properties.csv')
 
 # Define features and target variable
-X = df.drop(columns=['id', 'price', 'cadastral_income', 'region'])  # Features
+X = df.drop(columns=['id', 'cadastral_income', 'region'])  # Features
 y = df['price']  # Target variable
 
 # New Feature: Extract the first two digits of the zip_code 
