@@ -1,16 +1,13 @@
-# train.py
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import cross_val_score
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.impute import SimpleImputer
-from sklearn.pipeline import Pipeline
-from sklearn.compose import ColumnTransformer
+from sklearn.model_selection import train_test_split
 from xgboost import XGBRegressor
+import pickle
 
 # Constants
+DATA_FILE = 'data/properties.csv'
 TARGET_COLUMN = 'price'
+
 
 def load_data(file_path):
     """Load data from CSV file."""
@@ -31,12 +28,27 @@ def train_model(X_train, y_train):
     xgb_model.fit(X_train, y_train)
     return xgb_model
 
-def perform_cross_validation(model, X_train, y_train):
-    """Perform k-fold cross-validation."""
-    cv_scores = cross_val_score(model, X_train, y_train, cv=5, scoring='neg_mean_squared_error')
-    rmse_cv_scores = np.sqrt(-cv_scores)
-    mean_rmse_cv = rmse_cv_scores.mean()
-    print('')
-    print('Cross-Validation Results:')
-    print("Mean Cross-Validation RMSE:", mean_rmse_cv)
-    print("Cross-Validation RMSE Scores:", rmse_cv_scores)
+def save_model(model, file_path):
+    """Save the trained model."""
+    with open(file_path, 'wb') as f:
+        pickle.dump(model, f)
+
+def main():
+    # Load data
+    df = load_data(DATA_FILE)
+
+    # Preprocess data
+    X, y = preprocess_data(df)
+
+    # Split data into train and test sets
+    X_train, _, y_train, _ = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Train model
+    model = train_model(X_train, y_train)
+
+    # Save model
+    save_model(model, 'trained_model.pkl')
+
+
+if __name__ == "__main__":
+    main()
