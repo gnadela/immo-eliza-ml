@@ -1,47 +1,42 @@
-from sklearn.pipeline import Pipeline
-from sklearn.linear_model import LinearRegression
+# train.py
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import cross_val_score
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+from sklearn.preprocessing import OneHotEncoder
 from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import OneHotEncoder, PowerTransformer
+from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
+from xgboost import XGBRegressor
 
-def preprocess_data(X):
+# Constants
+TARGET_COLUMN = 'price'
 
-    # Define categorical and numerical features
-    categorical_features = X.select_dtypes(include=['object']).columns.tolist() 
-    numerical_features = X.select_dtypes(include=['int64', 'float64']).columns.tolist()
+def load_data(file_path):
+    """Load data from CSV file."""
+    return pd.read_csv(file_path)
 
-    # Define preprocessing steps for categorical and numerical features
-    categorical_transformer = Pipeline(steps=[
-        ('imputer', SimpleImputer(strategy='constant', fill_value='MISSING')),
-        ('onehot', OneHotEncoder(handle_unknown='ignore'))
-    ])
-
-    numerical_transformer = Pipeline(steps=[
-        ('imputer', SimpleImputer(strategy='median')),
-        ('scaler', PowerTransformer())
-    ])
-
-    # Combine preprocessing steps for categorical and numerical features
-    preprocessor = ColumnTransformer(
-        transformers=[
-            ('cat', categorical_transformer, categorical_features),
-            ('num', numerical_transformer, numerical_features)
-        ])
-
-    return preprocessor
-
+def preprocess_data(df):
+    """Preprocess data: handle missing values, encode categorical variables."""
+    X = df.drop(columns=[TARGET_COLUMN])
+    y = df[TARGET_COLUMN]
+    
+    X = pd.get_dummies(X)
+    X.fillna(0, inplace=True)  # Fill missing values
+    return X, y
 
 def train_model(X_train, y_train):
-    # Create preprocessing pipeline
-    preprocessor = preprocess_data(X_train)
+    """Train XGBoost model."""
+    xgb_model = XGBRegressor()
+    xgb_model.fit(X_train, y_train)
+    return xgb_model
 
-    # Define the model
-    model = LinearRegression()
-
-    # Create the pipeline
-    pipeline = Pipeline(steps=[('preprocessor', preprocessor), ('model', model)])
-
-    # Fit the pipeline (preprocessing + model) on the training data
-    pipeline.fit(X_train, y_train)
-
-    return pipeline
+def perform_cross_validation(model, X_train, y_train):
+    """Perform k-fold cross-validation."""
+    cv_scores = cross_val_score(model, X_train, y_train, cv=5, scoring='neg_mean_squared_error')
+    rmse_cv_scores = np.sqrt(-cv_scores)
+    mean_rmse_cv = rmse_cv_scores.mean()
+    print('')
+    print('Cross-Validation Results:')
+    print("Mean Cross-Validation RMSE:", mean_rmse_cv)
+    print("Cross-Validation RMSE Scores:", rmse_cv_scores)
