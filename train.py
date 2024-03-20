@@ -1,12 +1,15 @@
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import PowerTransformer
 from xgboost import XGBRegressor
 import pickle
+
 
 # Constants
 DATA_FILE = 'data/properties.csv'
 TARGET_COLUMN = 'price'
+REMOVE_COLUMN = ['id', 'region', 'cadastral_income']
 
 
 def load_data(file_path):
@@ -15,16 +18,26 @@ def load_data(file_path):
 
 def preprocess_data(df):
     """Preprocess data: handle missing values, encode categorical variables."""
-    X = df.drop(columns=[TARGET_COLUMN])
+    X = df.drop(columns=[TARGET_COLUMN] + REMOVE_COLUMN)
     y = df[TARGET_COLUMN]
-    
-    X = pd.get_dummies(X)
-    X.fillna(0, inplace=True)  # Fill missing values
+
+    X = pd.get_dummies(X)               # One-hot encoding
+    X.fillna(X.median(), inplace=True)  # Fill missing values
+
     return X, y
 
 def train_model(X_train, y_train):
     """Train XGBoost model."""
-    xgb_model = XGBRegressor()
+    xgb_model = XGBRegressor(
+        n_estimators= 200,        # Increase number of trees
+        max_depth=7,             # Increase maximum tree depth
+        learning_rate=0.1       # Reduce learning rate
+    #    subsample=0.8,           # Use subsample of training instances
+    #    colsample_bytree     # Use subsample of features
+    #    reg_lambda=1,            # L2 regularization
+    #    reg_alpha=0.5            # L1 regularization
+    )
+    
     xgb_model.fit(X_train, y_train)
     return xgb_model
 

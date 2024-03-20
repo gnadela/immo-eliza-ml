@@ -3,9 +3,10 @@ import numpy as np
 import pickle
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import cross_val_score
-
+from sklearn.preprocessing import PowerTransformer
 
 TARGET_COLUMN = 'price'
+REMOVE_COLUMN = ['id', 'region', 'cadastral_income']
 
 def load_data(file_path):
     """Load data from CSV file."""
@@ -13,11 +14,12 @@ def load_data(file_path):
 
 def preprocess_data(df):
     """Preprocess data: handle missing values, encode categorical variables."""
-    X = df.drop(columns=[TARGET_COLUMN])
+    X = df.drop(columns=[TARGET_COLUMN] + REMOVE_COLUMN)
     y = df[TARGET_COLUMN]
     
     X = pd.get_dummies(X)
-    X.fillna(0, inplace=True)  # Fill missing values
+    X.fillna(X.median(), inplace=True)  # Fill missing values
+
     return X, y
 
 def load_model(file_path):
@@ -42,7 +44,7 @@ def evaluate(y_test, y_pred):
 
 def perform_cross_validation(model, X_train, y_train):
     """Perform k-fold cross-validation."""
-    cv_scores = cross_val_score(model, X_train, y_train, cv=5, scoring='neg_mean_squared_error')
+    cv_scores = cross_val_score(model, X_train, y_train, cv=6, scoring='neg_mean_squared_error')
     rmse_cv_scores = np.sqrt(-cv_scores)
     mean_rmse_cv = rmse_cv_scores.mean()
     print('')
