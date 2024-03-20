@@ -60,7 +60,7 @@ def main():
     X, y = preprocess_data(df)
 
     # Load trained model
-    model = load_model('trained_model.pkl')
+    model = load_model('model/trained_model.pkl')
 
     # Make predictions
     predictions = predict(model, X)

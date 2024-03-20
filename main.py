@@ -1,5 +1,5 @@
-from train import main as train_main
-from predict import main as predict_main
+from src.train import main as train_main
+from src.predict import main as predict_main
 
 def main():
     # Train the model

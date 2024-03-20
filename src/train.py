@@ -60,7 +60,7 @@ def main():
     model = train_model(X_train, y_train)
 
     # Save model
-    save_model(model, 'trained_model.pkl')
+    save_model(model, 'model/trained_model.pkl')
 
 
 if __name__ == "__main__":

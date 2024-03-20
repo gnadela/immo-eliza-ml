@@ -11,6 +11,7 @@ The input dataset consists of real estate property information scraped from Immo
 Some preliminary prepation of the input data:
 - There are about 76 000 properties, roughly equally spread across houses and apartments
 - Each property has a unique identifier id
+
 - The target variable is price
 - Variables prefixed with fl_ are dummy variables (1/0)
 - Variables suffixed with _sqm indicate the measurement is in square meters
@@ -40,7 +41,7 @@ Performance metrics for the **XGBoost** model:
     Root Mean Squared Error (RMSE): 141932.9963525912
     R-squared (R2): 0.8951632610887943
 
-Here are the cross-validation results to assess ths model's generalization performance:
+K-fold cross-validation is performed to assess ths model's generalization performance:
 
     Mean Cross-Validation RMSE: 230398.6343194463
 
@@ -54,7 +55,7 @@ Performance metrics for the Linear Regression model:
     Root Mean Squared Error: 292475.3457237516
     R-squared: 0.506795723844395
 
-**Random Forest** was also tested. Unfortunately, the results were not saved.  It showed similar results as XGBoost but was taking a lot more time to run, ie. about 40 minutes compared to 5 seconds with XGBoost.
+**Random Forest** was also tested. It showed similar results as XGBoost but was taking a lot more time to run, ie. about 40 minutes compared to 5 seconds with XGBoost.
 
 
 
