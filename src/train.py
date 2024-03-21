@@ -30,7 +30,7 @@ def train_model(X_train, y_train):
     """Train XGBoost model."""
     xgb_model = XGBRegressor(
         n_estimators= 200,        # Increase number of trees
-        max_depth=7,             # Increase maximum tree depth
+        max_depth=8,             # Increase maximum tree depth
         learning_rate=0.1       # Reduce learning rate
     #    subsample=0.8,           # Use subsample of training instances
     #    colsample_bytree     # Use subsample of features
@@ -54,7 +54,7 @@ def main():
     X, y = preprocess_data(df)
 
     # Split data into train and test sets
-    X_train, _, y_train, _ = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, _, y_train, _ = train_test_split(X, y, test_size=0.2, random_state=67)
 
     # Train model
     model = train_model(X_train, y_train)

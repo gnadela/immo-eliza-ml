@@ -44,7 +44,7 @@ def evaluate(y_test, y_pred):
 
 def perform_cross_validation(model, X_train, y_train):
     """Perform k-fold cross-validation."""
-    cv_scores = cross_val_score(model, X_train, y_train, cv=6, scoring='neg_mean_squared_error')
+    cv_scores = cross_val_score(model, X_train, y_train, cv=5, scoring='neg_mean_squared_error')
     rmse_cv_scores = np.sqrt(-cv_scores)
     mean_rmse_cv = rmse_cv_scores.mean()
     print('')
