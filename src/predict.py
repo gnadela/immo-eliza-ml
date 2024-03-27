@@ -6,7 +6,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import PowerTransformer
 
 TARGET_COLUMN = 'price'
-REMOVE_COLUMN = ['id', 'region', 'cadastral_income']
+REMOVE_COLUMN = ['id', 'region', 'cadastral_income', 'latitude', 'longitude']
 
 def load_data(file_path):
     """Load data from CSV file."""

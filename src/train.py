@@ -1,7 +1,5 @@
 import pandas as pd
-import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import PowerTransformer
 from xgboost import XGBRegressor
 import pickle
 
@@ -9,7 +7,7 @@ import pickle
 # Constants
 DATA_FILE = 'data/properties.csv'
 TARGET_COLUMN = 'price'
-REMOVE_COLUMN = ['id', 'region', 'cadastral_income']
+REMOVE_COLUMN = ['id', 'region', 'cadastral_income', 'latitude', 'longitude']
 
 
 def load_data(file_path):
